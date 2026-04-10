@@ -1,0 +1,5 @@
+{
+  "name": "MRDataRescue",
+  "description": "Una utilidad para intentar recuperar y copiar archivos de discos externos a carpetas locales, diseñada para manejar errores de lectura de forma graciosa.",
+  "requestFramePermissions": []
+}
