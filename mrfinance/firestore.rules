@@ -1,0 +1,94 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['id', 'email']) &&
+             data.id is string &&
+             data.email is string &&
+             data.email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidCategory(data) {
+      return data.keys().hasAll(['name', 'budget']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.budget is number && data.budget >= 0;
+    }
+
+    function isValidIncome(data) {
+      return data.keys().hasAll(['amount', 'description', 'type', 'date', 'userId']) &&
+             data.amount is number && data.amount > 0 &&
+             data.description is string && data.description.size() > 0 && data.description.size() < 200 &&
+             data.type is string &&
+             data.date is string &&
+             data.userId == request.auth.uid;
+    }
+
+    function isValidExpense(data) {
+      return data.keys().hasAll(['amount', 'description', 'date', 'categoryId', 'userId']) &&
+             data.amount is number && data.amount > 0 &&
+             data.description is string && data.description.size() > 0 && data.description.size() < 200 &&
+             data.date is string &&
+             data.categoryId is string &&
+             data.userId == request.auth.uid;
+    }
+
+    function isValidSavingsGoal(data) {
+      return data.keys().hasAll(['name', 'targetAmount', 'targetDate', 'userId']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.targetAmount is number && data.targetAmount > 0 &&
+             data.targetDate is string &&
+             data.userId == request.auth.uid;
+    }
+
+    function isValidDebt(data) {
+      return data.keys().hasAll(['name', 'initialAmount', 'userId']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.initialAmount is number && data.initialAmount > 0 &&
+             data.userId == request.auth.uid;
+    }
+
+    // Rules
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+      
+      match /categories/{categoryId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isValidCategory(request.resource.data);
+        allow delete: if isOwner(userId);
+      }
+      
+      match /incomes/{incomeId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isValidIncome(request.resource.data);
+        allow delete: if isOwner(userId);
+      }
+      
+      match /expenses/{expenseId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isValidExpense(request.resource.data);
+        allow delete: if isOwner(userId);
+      }
+      
+      match /savingsGoals/{goalId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isValidSavingsGoal(request.resource.data);
+        allow delete: if isOwner(userId);
+      }
+      
+      match /debts/{debtId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isValidDebt(request.resource.data);
+        allow delete: if isOwner(userId);
+      }
+    }
+  }
+}

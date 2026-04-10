@@ -1,0 +1,5 @@
+{
+  "name": "MRFinance",
+  "description": "Una aplicación de finanzas personales para gestionar ingresos, gastos, ahorros y deudas con visualizaciones claras y seguimiento de metas.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,126 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "name": { "type": "string" }
+      },
+      "required": ["id", "email"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Expense category with budget",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "icon": { "type": "string" },
+        "budget": { "type": "number" }
+      },
+      "required": ["name", "budget"]
+    },
+    "Income": {
+      "title": "Income",
+      "description": "Income record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "amount": { "type": "number" },
+        "description": { "type": "string" },
+        "type": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "userId": { "type": "string" }
+      },
+      "required": ["amount", "description", "type", "date", "userId"]
+    },
+    "Expense": {
+      "title": "Expense",
+      "description": "Expense record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "amount": { "type": "number" },
+        "description": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "isPaid": { "type": "boolean" },
+        "paidAmount": { "type": "number" },
+        "categoryId": { "type": "string" },
+        "userId": { "type": "string" }
+      },
+      "required": ["amount", "description", "date", "categoryId", "userId"]
+    },
+    "SavingsGoal": {
+      "title": "SavingsGoal",
+      "description": "Savings goal with contributions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "targetAmount": { "type": "number" },
+        "currentAmount": { "type": "number" },
+        "targetDate": { "type": "string", "format": "date-time" },
+        "userId": { "type": "string" },
+        "contributions": {
+          "type": "array",
+          "items": { "$ref": "SavingsContribution" }
+        }
+      },
+      "required": ["name", "targetAmount", "targetDate", "userId"]
+    },
+    "SavingsContribution": {
+      "title": "SavingsContribution",
+      "description": "Contribution to a savings goal",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "amount": { "type": "number" },
+        "date": { "type": "string", "format": "date-time" },
+        "savingsGoalId": { "type": "string" }
+      },
+      "required": ["amount", "date", "savingsGoalId"]
+    },
+    "Debt": {
+      "title": "Debt",
+      "description": "Debt record with payments",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "initialAmount": { "type": "number" },
+        "currentBalance": { "type": "number" },
+        "dueDate": { "type": "string", "format": "date-time" },
+        "notes": { "type": "string" },
+        "userId": { "type": "string" },
+        "payments": {
+          "type": "array",
+          "items": { "$ref": "DebtPayment" }
+        }
+      },
+      "required": ["name", "initialAmount", "userId"]
+    },
+    "DebtPayment": {
+      "title": "DebtPayment",
+      "description": "Payment towards a debt",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "amount": { "type": "number" },
+        "date": { "type": "string", "format": "date-time" },
+        "debtId": { "type": "string" }
+      },
+      "required": ["amount", "date", "debtId"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": { "schema": "User", "description": "User profile" },
+    "/users/{userId}/categories/{categoryId}": { "schema": "Category", "description": "User expense categories" },
+    "/users/{userId}/incomes/{incomeId}": { "schema": "Income", "description": "User income records" },
+    "/users/{userId}/expenses/{expenseId}": { "schema": "Expense", "description": "User expense records" },
+    "/users/{userId}/savingsGoals/{goalId}": { "schema": "SavingsGoal", "description": "User savings goals" },
+    "/users/{userId}/debts/{debtId}": { "schema": "Debt", "description": "User debt records" }
+  }
+}
