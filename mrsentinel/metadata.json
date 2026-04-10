@@ -1,0 +1,5 @@
+{
+  "name": "MRsentinel",
+  "description": "Una suite integral de mantenimiento y monitoreo de PC para escaneo de hardware, actualización de drivers, seguimiento de recursos y gestión de sistemas.",
+  "requestFramePermissions": []
+}
