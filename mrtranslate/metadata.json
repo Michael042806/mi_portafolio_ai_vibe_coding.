@@ -1,0 +1,5 @@
+{
+  "name": "MRtranslate",
+  "description": "Neural Video Translation & Dubbing Engine. A 'Vibe Coding' showcase bridging language gaps with Gemini AI and real-time synthesis.",
+  "requestFramePermissions": []
+}
